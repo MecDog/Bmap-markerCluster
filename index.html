@@ -9,17 +9,18 @@
 </head>
 <style>
   body, html,#map {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
-  #line {
-    width: 60px;
-    height: 1px;
-    background-color: red;
+  #changNum {
     position: absolute;
-    top: 50%;
-    left: 50%
+    right: 10px;
+    top: 10px;
   }
 </style>
 <body>
   <div id ="map"></div>
-  <div id="line"></div>
+  <form id ="changNum">
+    <label>marker数量:</label>
+    <input id="num" type="text"/>
+    <button type="submit">确认</button>
+  </form>
 </body>
 </html>

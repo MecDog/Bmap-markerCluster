@@ -1,6 +1,4 @@
-import markerCluster from './markerCluster_wasm'
-import customMarker from './customMarker'
-import customInfoWindow from './customInfoWindow'
+import wasmCluster from './markerCluster_wasm'
 import jsCluster from './markerCluster'
 import Vue from 'vue'
 
@@ -8,17 +6,20 @@ let map = new BMap.Map("map", {enableMapClick: false})
 map.centerAndZoom(new BMap.Point(105.3964,35.9093), 7)
 map.enableScrollWheelZoom()
 map.disableDoubleClickZoom()
-map.removeTileLayer()
 
-let MAX = 10
+
+let MAX = 100000
 
 let pts = []
 for (var j = 0; j< MAX; j++) {
   pts.push({
       location:{
-        lng: Math.random() * 40 + 80,
-        lat: Math.random() * 30 + 18,
+        lng: Math.random() * 35 + 85,
+        lat: Math.random() * 25 + 20,
       },
+      gid: 'sdwasdw',
+      name: '张三'
+
     })
 }
 let icon = require('./assets/map_gather.png')
@@ -47,7 +48,7 @@ let infoWindow = {
   },
   methods: {
     call () {
-      console.log(this, this.$data)
+      
     }
   }
 }
@@ -60,7 +61,6 @@ let opts = {
     height: 30,
     methods: {
       click (data, marker) {
-        console.log(data)
       }
     },
   },
@@ -73,7 +73,7 @@ let opts = {
   cluster: {
     marker: {
       icon:clusterIcon,
-      text: {
+      textStyle: {
         fontSize: '12px',
         color: 'red',
         left: '15px',
@@ -82,26 +82,38 @@ let opts = {
       },
       methods: {
         click(data) {
-          console.log(data)
         }
       },
     },
     gridSize: 60,
     minClusterSize: 2,
+    maxZoom: 18,
     infoWindow: {
       el: infoWindow,
       fetch: () => {
         return Promise.resolve({address: '幻想乡'})
-      }
+      },
+      aotuOpen: true
     }
   }
 }
 
-let layer = new markerCluster(map, pts, opts)
-// let layer2 = new jsCluster(map, pts, opts)
-let projection = map.getMapType().getProjection()
-map.addEventListener('moveend', () => {
-  console.log( projection.lngLatToPoint(map.getCenter()))
-  console.log(map.pointToPixel(map.getCenter()))
+// let layer = new wasmCluster(map, pts, opts)
+let layer2 = new jsCluster(map, pts, opts)
+
+let form = document.querySelector('#changNum')
+form.addEventListener('submit', (e) => {
+  e.preventDefault()
+  let val = form.querySelector('#num').value
+  let points = []
+  for (var j = 0; j< +val; j++) {
+    points.push({
+        location:{
+          lng: Math.random() * 40 + 80,
+          lat: Math.random() * 30 + 18,
+        },
+      })
+  }
+  layer.setMarkers(points)
 })
 window.map = map

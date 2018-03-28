@@ -9,7 +9,7 @@ function extend (obj1, obj2) {
   })
   return obj1
 }
-class customMarker extends window.BMap.Overlay {
+class Marker extends window.BMap.Overlay {
   defaultOptions = {
     offsetX: 0,
     offsetY: 0
@@ -41,6 +41,12 @@ class customMarker extends window.BMap.Overlay {
     } else {
       this.$el = this.createElement()
     }
+    this.$el.addEventListener('mousedown', (e) => {
+      e.stopPropagation()
+    })
+    this.$el.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+    })
     if (opts.methods) {
       opts.methods.click && this.$el.addEventListener('click', () => {
         opts.methods.click(this.data, this)
@@ -70,16 +76,16 @@ class customMarker extends window.BMap.Overlay {
       height: opts.height + 'px'
     })
     div.appendChild(img)
-    if (opts.text && this.isCluster) {
+    if (opts.textStyle && this.isCluster) {
       let span = document.createElement('span')
       span.innerText = this.data.length
-      if (opts.text.transform) console.warn('[markerCluster]：transfrom样式会严重影响地图拖动性能，谨慎使用')
+      if (opts.textStyle.transform) console.warn('[markerCluster]：transfrom样式会严重影响地图拖动性能，谨慎使用')
       extend(span.style, {
         position: 'absolute',
         left: '0',
         top: '0'
       })
-      extend(span.style, opts.text)
+      extend(span.style, opts.textStyle)
       div.appendChild(span)
     }
     return div
@@ -98,4 +104,4 @@ class customMarker extends window.BMap.Overlay {
   }
 }
 
-export default customMarker
+export default Marker

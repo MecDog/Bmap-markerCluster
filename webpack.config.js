@@ -15,7 +15,7 @@ module.exports = {
     filename: '[name].js',
   },
   resolve: {
-    extensions: ['wasm', '.js', '.vue','.json'],
+    extensions: ['.js', '.vue','.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@':  path.resolve('dist'),
@@ -23,10 +23,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.wasm$/,
-        loader: 'wasm-loader'
-      },
       {
         test: /\.js$/,
         loader: 'babel-loader',

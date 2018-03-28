@@ -1,5 +1,5 @@
-import CustomMarker from './customMarker'
-import CustomInfoWindow from './customInfoWindow.js'
+import CustomMarker from './marker'
+import InfoWindow from './infoWindow.js'
 class MarkerCluster {
   markers = []
   clusters = []
@@ -46,9 +46,10 @@ class MarkerCluster {
       this.infoWindow = this.createInfoWindow(options)
       this.map.addOverlay(this.infoWindow)
     }
+
   }
   createInfoWindow (opts, isCluster) {
-    let infoWindow = new CustomInfoWindow(opts.infoWindow)
+    let infoWindow = new InfoWindow(opts.infoWindow)
     // 默认会自动marker点击事件自动打开infoWindow
     if (opts.infoWindow.autoOpen !== false) {
       let methods = opts.marker.methods || {}
@@ -69,17 +70,17 @@ class MarkerCluster {
     }
     return infoWindow
   }
-  // 将经纬度坐标转换为墨托卡坐标,data为数组或一个数据对象
+  // 将经纬度坐标转换为墨托卡坐标,data为数据集合或单个
   transferToMercator (data) {
     var projection = this.map.getMapType().getProjection()
     if (data instanceof Array) {
       data.forEach((item) => {
         let pixel = projection.lngLatToPoint(item.location)
-        item.coordinates_mercator = [Math.round(pixel.x), Math.round(pixel.y)]
+        item.coordinates_mercator = [pixel.x,pixel.y]
       })
     } else {
       let pixel = projection.lngLatToPoint(data.location)
-      data.coordinates_mercator = [Math.round(pixel.x), Math.round(pixel.y)]
+      data.coordinates_mercator = [pixel.x, pixel.y]
     }
     return data
   }
