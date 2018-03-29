@@ -8,7 +8,7 @@ map.enableScrollWheelZoom()
 map.disableDoubleClickZoom()
 
 
-let MAX = 100000
+let MAX = 10000
 
 let pts = []
 for (var j = 0; j< MAX; j++) {
@@ -28,14 +28,12 @@ let infoWindow = {
   template: 
   `
     <div style="background-color:white">
-      <div v-show ="ajaxData.address"> 地点：{{ajaxData.address}}</div>
-      <div  v-if="markers.lengtg = 1">
+      <div v-show ="ajaxData.address" style="white-space: nowrap;"> 地点：{{ajaxData.address}}</div>
+      <div  v-if="markers.length == 1">
         <div @click="call">经度：{{markers[0]&& markers[0].coordinates_mercator[0]}}</div>
         <div>纬度：{{markers[0] && markers[0].coordinates_mercator[1]}}</div>
       </div>
-      <div v-else>
-      <div>数量：{{markers.length}}</div>
-      </div>
+      <div v-else style="white-space: nowrap;">数量：{{markers.length}}</div>
     </div>
   `,
   data () {
@@ -49,6 +47,11 @@ let infoWindow = {
   methods: {
     call () {
       
+    }
+  },
+  watch: {
+    markers (val) {
+      console.log(val.length)
     }
   }
 }
@@ -76,7 +79,7 @@ let opts = {
       textStyle: {
         fontSize: '12px',
         color: 'red',
-        left: '15px',
+        left: '18px',
         top: '15px',
         // transform: 'translate(10px, 10px)'
       },
