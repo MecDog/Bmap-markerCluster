@@ -11,7 +11,7 @@
     使用webAssembly可以提高一倍的js计算性能，时间减少至180ms(一般100ms左右)，可惜目前支持有限。本库提供了c++源码和对应wasm文件，大家可以尝试玩玩  
   **4、使用canva代替dom (当前并不支持)**  
     经测试，dom操作一般会占用80~100ms的时间，若使用canvas进行绘制，可以将时间缩短为5ms(没想到吧)。但缺点是对marker的拓展性上太弱，因此若不是对性能有极高的需求，不太建议，在实际使用中，经过第1和第2条的优化下，10W数量级的聚合操作基本还算流畅。  
-  **5、使用vue模板来配置infoWindow，自定义infoWindow和Marker更方便**
+  **5、使用vue模板来配置infoWindow，自定义infoWindow和Marker更方便**
 ## Example
 ```
 import markerCluster from './markerCluster'
