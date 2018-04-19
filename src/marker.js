@@ -14,7 +14,7 @@ class Marker extends window.BMap.Overlay {
     offsetX: 0,
     offsetY: 0
   }
-  constructor (point, markerOptions, data) {
+  constructor (point, data, markerOptions = {}) {
     super()
     this.isCluster = Array.isArray(data) && data.length > 0
     let defaultOptions = {

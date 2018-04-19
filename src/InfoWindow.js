@@ -15,7 +15,7 @@ class InfoWindow extends window.BMap.Overlay {
     if (!point) {
       this._point = new window.BMap.Point(116.404, 39.915)
     }
-    this.options = Object.assign(defaultOptions, options)
+    this.options = Object.assign({}, defaultOptions, options)
     this.$el = this.$instance.$mount().$el
   }
   initialize (map) {

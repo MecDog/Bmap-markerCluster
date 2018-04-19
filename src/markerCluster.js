@@ -17,9 +17,9 @@ class MarkerCluster {
     this.initOptions(options)
 
     this.map.addEventListener('zoomend', () => {
-      console.time('全过程')
+      // console.time('全过程')
       this._redraw()
-      console.timeEnd('全过程')
+      // console.timeEnd('全过程')
     })
     this.map.addEventListener('moveend', () => {
       this._redraw()
@@ -167,10 +167,10 @@ class MarkerCluster {
     if (data instanceof Cluster) {
       let center = data.getCenter()
       baiduPoint = new window.BMap.Point(center.location.lng, center.location.lat)
-      marker = new CustomMarker(baiduPoint, options.marker, data.markers)
+      marker = new CustomMarker(baiduPoint, data.markers, options.marker)
     } else {
       baiduPoint = new window.BMap.Point(data.location.lng, data.location.lat)
-      marker = new CustomMarker(baiduPoint, options.marker, data)
+      marker = new CustomMarker(baiduPoint, data, options.marker)
     }
     return marker
   }
@@ -178,14 +178,14 @@ class MarkerCluster {
     let clusterOpts = this.options.cluster
     if (clusterOpts && this.map.getZoom() <= clusterOpts.maxZoom) {
       this.clusters = []
-      this.clearMarkers()
-      console.time('计算耗时')
+      // console.time('计算耗时')
       this._createClusters()
-      console.timeEnd('计算耗时')
+      // console.timeEnd('计算耗时')
     }
-    console.time('dom绘制')
+    this.clearMarkers()
+    // console.time('dom绘制')
     this.draw()
-    console.timeEnd('dom绘制')
+    // console.timeEnd('dom绘制')
   }
   setMarkers (data) {
     this.data = this.transferToMercator(data)

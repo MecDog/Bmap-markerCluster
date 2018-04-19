@@ -232,10 +232,10 @@ class MarkerCluster {
     if (data instanceof Cluster) {
       let center = data.getCenter()
       baiduPoint = new window.BMap.Point(center.location.lng, center.location.lat)
-      marker = new CustomMarker(baiduPoint, options.marker, data.markers)
+      marker = new CustomMarker(baiduPoint, data.markers, options.marker)
     } else {
       baiduPoint = new window.BMap.Point(data.location.lng, data.location.lat)
-      marker = new CustomMarker(baiduPoint, options.marker, data)
+      marker = new CustomMarker(baiduPoint, data, options.marker)
     }
     return marker
   }
