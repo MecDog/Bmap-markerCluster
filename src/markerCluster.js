@@ -76,11 +76,11 @@ class MarkerCluster {
     if (data instanceof Array) {
       data.forEach((item) => {
         let pixel = projection.lngLatToPoint(item.location)
-        item.coordinates_mercator = [pixel.x,pixel.y]
+        item.coordinates_mercator = [Math.round(pixel.x), Math.round(pixel.y)]
       })
     } else {
       let pixel = projection.lngLatToPoint(data.location)
-      data.coordinates_mercator = [pixel.x, pixel.y]
+      data.coordinates_mercator = [Math.round(pixel.x), Math.round(pixel.y)]
     }
     return data
   }
@@ -106,7 +106,7 @@ class MarkerCluster {
     let ponit = data.coordinates_mercator
     this.clusters.forEach(cluster => {
       if(cluster.isPointInCluster(ponit)) {
-        let center = cluster.getCenter().coordinates_mercator // 获取聚合中心的墨卡托坐标
+        let center = cluster.getCenter() // 获取聚合中心的墨卡托坐标
         // 计算点与聚合中心的距离, 取最近的一个聚合类
         let d = Math.pow(ponit[0] - center[0], 2) + Math.pow(ponit[1] - center[1], 2)
         // let d = Math.abs(ponit[0] - center[0])*Math.ceil(Math.sqrt(1 + Math.pow((ponit[1] - center[1])/(ponit[0] - center[0]), 2)))
@@ -166,7 +166,8 @@ class MarkerCluster {
     let marker
     if (data instanceof Cluster) {
       let center = data.getCenter()
-      baiduPoint = new window.BMap.Point(center.location.lng, center.location.lat)
+      let projection = this.map.getMapType().getProjection()
+      baiduPoint = projection.pointToLngLat({x:center[0], y: center[1]})
       marker = new CustomMarker(baiduPoint, data.markers, options.marker)
     } else {
       baiduPoint = new window.BMap.Point(data.location.lng, data.location.lat)
@@ -212,9 +213,10 @@ class Cluster {
   constructor (MarkerCluster, data) {
     this.MarkerCluster = MarkerCluster
     this.clusterOptions = MarkerCluster.options.cluster
-    this.center = data
+    this.center = data.coordinates_mercator
     this.markers.push(data)
   }
+  // 返回聚合的中心点平面坐标，格式为[x,y]
   getCenter () {
     return this.center
   }
@@ -224,15 +226,24 @@ class Cluster {
   // 点是否在聚合范围内，point为墨卡托坐标
   isPointInCluster (coordinates) {
     let gridSize = this.clusterOptions.gridSize_mercator
-    let center = this.center.coordinates_mercator
+    let center = this.center
     let result = coordinates[0] >= center[0] - gridSize &&
     coordinates[0] <= center[0] + gridSize &&
     coordinates[1] <= center[1] + gridSize &&
     coordinates[1] >= center[1] - gridSize
     return result
   }
-  addMarker (marker) {
-    this.markers.push(marker)
+  addMarker (markerData) {
+    this.markers.push(markerData)
+    // 若聚合的中心取众多marker的质心，更新中心点center位置
+    if (this.clusterOptions.isAverageCenter) {
+      let n = this.markers.length
+      let ox = this.center[0]
+      let oy = this.center[1]
+      let x1 = markerData.coordinates_mercator[0]
+      let y1 = markerData.coordinates_mercator[1]
+      this.center = [(ox * (n - 1) + x1)/n, (oy * (n - 1) + y1)/n]
+    }
   }
 }
 
