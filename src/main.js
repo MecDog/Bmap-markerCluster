@@ -8,22 +8,22 @@ map.enableScrollWheelZoom()
 map.disableDoubleClickZoom()
 
 
-let MAX = 10000
+let MAX = 5
 
 let pts = []
 for (var j = 0; j< MAX; j++) {
   pts.push({
       location:{
-        lng: Math.random() * 35 + 85,
-        lat: Math.random() * 25 + 20,
+        lng: Math.random() * 5 + 95,
+        lat: Math.random() * 5 + 35,
       },
-      gid: 'sdwasdw',
-      name: '张三'
+      gid: j,
+      name: '第'+ j
 
     })
 }
 let icon = require('./assets/map_gather.png')
-let clusterIcon = require('./assets/persons.png')
+let clusterIcon = require('./assets/Apple.png')
 let infoWindow = {
   template: 
   `
@@ -38,7 +38,7 @@ let infoWindow = {
   `,
   data () {
     return {
-      markers: [],
+      markers: [{}],
       ajaxData: {
         address: ''
       }
@@ -76,6 +76,8 @@ let opts = {
   cluster: {
     marker: {
       icon:clusterIcon,
+      offsetX: -16,
+      offsetY: -16,
       textStyle: {
         fontSize: '12px',
         color: 'red',
@@ -89,20 +91,22 @@ let opts = {
       },
     },
     gridSize: 60,
-    minClusterSize: 2,
+    minClusterSize: 3,
     maxZoom: 18,
+    // isAverageCenter: true,
     infoWindow: {
       el: infoWindow,
       fetch: () => {
         return Promise.resolve({address: '幻想乡'})
       },
       aotuOpen: true
-    }
+    },
   }
 }
 
 // let layer = new wasmCluster(map, pts, opts)
 let layer2 = new jsCluster(map, pts, opts)
+window.layer = layer2
 
 let form = document.querySelector('#changNum')
 form.addEventListener('submit', (e) => {
@@ -120,3 +124,10 @@ form.addEventListener('submit', (e) => {
   layer.setMarkers(points)
 })
 window.map = map
+
+// console.time('平面坐标转球面坐标')
+// for(let i = 10000; i > 0 ; i--) {
+//   let projection = map.getMapType().getProjection()
+//   projection.pointToLngLat({x:1000000, y: 500000})
+// }
+// console.timeEnd('平面坐标转球面坐标')
